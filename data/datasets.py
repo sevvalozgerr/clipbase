@@ -36,8 +36,8 @@ def build_transforms(img_size, train=False):
 class JsonlAD(Dataset):
     """Reads a jsonl metadata file. Keys are configurable; defaults match common
     AA-CLIP/AnomalyCLIP metadata. Adjust KEYS if your jsonl differs."""
-    KEYS = {"img": "img_path", "mask": "mask_path",
-            "label": "anomaly", "cls": "cls_name"}
+    KEYS = {"img": "image_path", "mask": "mask_path",
+            "label": "anomaly", "cls": "class_name"}
 
     def __init__(self, meta_path, base_path, img_size, train=False):
         self.base = base_path

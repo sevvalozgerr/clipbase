@@ -20,4 +20,10 @@ seed: 111
 lambda_focal: 1.0
 lambda_dice: 1.0
 
+dataset_roots:
+  VisA:  "/content/drive/MyDrive/AA-CLIP/data/VisA_20220922"
+  MVTec: "/content/drive/MyDrive/AA-CLIP/data/mvtec_ad"
+  BTAD:  "/content/drive/MyDrive/AA-CLIP/data/BTech_Dataset_transformed"
+  MPDD:  "/content/drive/MyDrive/AA-CLIP/data/MPDD"
+  
 save_path: "/content/drive/MyDrive/tsclip_runs/baseline"
