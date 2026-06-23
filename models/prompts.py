@@ -37,17 +37,18 @@ class ObjectAgnosticPrompts(nn.Module):
 
     def _assemble(self, ctx, suffix_emb, suffix_tok):
         # suffix_tok layout: [SOS, w1, w2, ..., EOT, pad, ...]
-        L = suffix_emb.shape[0]
+        ctx_len = self.context_length # fix suffix length to match CLIP context length
+        #L = suffix_emb.shape[0]
         sos = suffix_emb[:1]                       # (1, width)
         rest = suffix_emb[1:]                      # words + EOT + pad
-        full = torch.cat([sos, ctx, rest], dim=0)  # (1+n_ctx+rest, width)
-        full = full[:L]                            # keep CLIP context length
+        full = torch.cat([sos, ctx, rest], dim=0)[:ctx_len]  # (1+n_ctx+rest, width)
+        #full = full[:L]                            # keep CLIP context length
         # rebuild a matching token-id row so EOT position is correct
-        tok = suffix_tok.clone()
+        tok = suffix_tok
         # shift suffix ids right by n_ctx (ctx positions hold no real id; use 0)
         new_tok = torch.zeros_like(tok)
         new_tok[0] = tok[0]
-        words = tok[1:L - self.n_ctx]
+        words = tok[1:ctx_len - self.n_ctx]
         new_tok[1 + self.n_ctx: 1 + self.n_ctx + words.shape[0]] = words
         return full.unsqueeze(0), new_tok.unsqueeze(0)
 

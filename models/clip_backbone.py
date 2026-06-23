@@ -64,7 +64,8 @@ class CLIPBackbone(nn.Module):
         tokenized: (n_prompts, L) token ids (to locate EOT position)."""
         x = prompt_embeds + self.clip.positional_embedding
         x = x.permute(1, 0, 2)
-        x = self.clip.transformer(x, attn_mask=self.clip.attn_mask)
+        attn_mask = getattr(self.clip, "attn_mask", None)  # FLAG: transformer.attn_mask
+        x = self.clip.transformer(x, attn_mask=attn_mask)
         x = x.permute(1, 0, 2)
         x = self.clip.ln_final(x)
         eot = tokenized.argmax(dim=-1)
