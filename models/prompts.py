@@ -37,7 +37,7 @@ class ObjectAgnosticPrompts(nn.Module):
 
     def _assemble(self, ctx, suffix_emb, suffix_tok):
         # suffix_tok layout: [SOS, w1, w2, ..., EOT, pad, ...]
-        ctx_len = self.context_length # fix suffix length to match CLIP context length
+        ctx_len = suffix_emb.shape[0] # max length of context + suffix
         #L = suffix_emb.shape[0]
         sos = suffix_emb[:1]                       # (1, width)
         rest = suffix_emb[1:]                      # words + EOT + pad

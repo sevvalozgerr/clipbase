@@ -38,8 +38,8 @@ class CLIPBackbone(nn.Module):
 
     def _make_hook(self, layer_id):
         def hook(module, inp, out):
-            # open_clip resblocks operate on (L, N, D); store as (N, L, D)
-            self._feats[layer_id] = out.permute(1, 0, 2)
+            # open_clip Transformer: inp=(B, 1+N, width), out=(B, 1+N, width)
+            self._feats[layer_id] = out
         return hook
 
     @torch.no_grad()
@@ -62,11 +62,10 @@ class CLIPBackbone(nn.Module):
     def encode_text_from_embeddings(self, prompt_embeds, tokenized):
         """prompt_embeds: (n_prompts, L, width) already including ctx tokens.
         tokenized: (n_prompts, L) token ids (to locate EOT position)."""
-        x = prompt_embeds + self.clip.positional_embedding
-        x = x.permute(1, 0, 2)
+        x = prompt_embeds + self.clip.positional_embedding 
         attn_mask = getattr(self.clip, "attn_mask", None)  # FLAG: transformer.attn_mask
         x = self.clip.transformer(x, attn_mask=attn_mask)
-        x = x.permute(1, 0, 2)
+        #x = x.permute(1, 0, 2)
         x = self.clip.ln_final(x)
         eot = tokenized.argmax(dim=-1)
         x = x[torch.arange(x.shape[0]), eot] @ self.clip.text_projection
