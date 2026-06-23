@@ -1,0 +1,10 @@
+torch>=2.1
+torchvision
+open_clip_torch>=2.24
+numpy
+scipy
+scikit-learn
+pillow
+pyyaml
+tqdm
+einops

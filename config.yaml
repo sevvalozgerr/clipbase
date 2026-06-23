@@ -1,0 +1,23 @@
+# ---- TS-CLIP step-zero baseline config ----
+backbone: "ViT-L-14-336"
+pretrained: "openai"
+img_size: 518
+feature_layers: [6, 12, 18, 24]
+n_ctx: 12
+
+routing: "none"          # baseline. later: "spatial"
+num_subspaces: 8
+
+data_root: "data_root"   # symlink -> /content/drive/MyDrive/AA-CLIP/data
+train_dataset: "VisA"
+test_datasets: ["MVTec", "BTAD", "MPDD"]
+
+epochs: 15
+batch_size: 8
+lr: 0.0001
+seed: 111
+
+lambda_focal: 1.0
+lambda_dice: 1.0
+
+save_path: "/content/drive/MyDrive/tsclip_runs/baseline"
